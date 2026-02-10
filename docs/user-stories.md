@@ -1,11 +1,7 @@
 # User Stories
 This document defines and tracks the core user stories for v1.
 
----
-
 ## Transactions
-
----
 
 ### Add an expense transaction
 As a user,
@@ -74,8 +70,6 @@ so that incorrect entries don't affect totals.
 
 ## Categories
 
----
-
 ### Create a category
 As a user,
 I want to create a category,
@@ -89,8 +83,6 @@ so that I can organize transactions.
 ---
 
 ## Summaries
-
----
 
 ### View summary
 As a user,

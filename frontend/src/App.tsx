@@ -1,8 +1,15 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import AddExpense from "./pages/AddExpense";
+
 function App() {
   return (
-    <div>
-      <h1>Expense Tracker</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/add" element={<AddExpense />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

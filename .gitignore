@@ -1,0 +1,60 @@
+# ======================
+# OS / Editor
+# ======================
+.DS_Store
+Thumbs.db
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ======================
+# Logs
+# ======================
+logs/
+*.log
+
+# ======================
+# Environment variables
+# ======================
+.env
+.env.*
+!.env.example
+
+# ======================
+# Backend (Java / Maven)
+# ======================
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Compiled class files
+*.class
+
+# ======================
+# Frontend (Node / React)
+# ======================
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+
+# ======================
+# Coverage / Testing
+# ======================
+coverage/
+*.lcov
+
+# ======================
+# Local databases
+# ======================
+*.db
+*.sqlite
+*.h2.db
+*.mv.db
+
+# ======================
+# Temporary files
+# ======================
+tmp/
+temp/

@@ -44,6 +44,10 @@ public class TransactionService {
             throw new IllegalArgumentException("Category is required");
         }
         UUID id = maybeCategory.getId();
+        if (id == null) {
+            throw new IllegalArgumentException("Category ID is required");
+        }
+
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
     }

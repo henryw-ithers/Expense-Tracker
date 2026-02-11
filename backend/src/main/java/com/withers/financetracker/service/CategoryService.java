@@ -39,6 +39,9 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public Category get(UUID id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Category ID is required");
+        }
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
     }

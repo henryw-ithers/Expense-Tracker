@@ -40,12 +40,13 @@ public class TransactionService {
     }
 
     private Category resolveCategory(Category maybeCategory) {
-        if (maybeCategory == null || maybeCategory.getId() == null) {
+        if (maybeCategory == null) {
             throw new IllegalArgumentException("Category is required");
         }
+
         UUID id = maybeCategory.getId();
         if (id == null) {
-            throw new IllegalArgumentException("Category ID is required");
+            throw new IllegalArgumentException("Category is required");
         }
 
         return categoryRepository.findById(id)

@@ -33,7 +33,7 @@ export function TransactionTable({ transactions, onDelete }: Props) {
             <td>{t.amount}</td>
             {onDelete ? (
               <td>
-                <button type="button" onClick={() => onDelete(t.id)}>
+                <button type="button" onClick={async () => await onDelete?.(t.id)}>
                   Delete
                 </button>
               </td>

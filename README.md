@@ -55,7 +55,7 @@ A full-stack personal finance tracking application that allows users to manage t
 
 ### Domain Model
 See the domain model diagram:
-- [Domain Model](docs/domain-model.png)
+- [Domain Model](docs/domain-model.md)
 
 ### User Stories
 See the user stories:

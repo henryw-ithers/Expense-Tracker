@@ -57,4 +57,8 @@ public class TransactionService {
     public List<Transaction> list() {
         return transactionRepository.findAll();
     }
+
+    public void delete(UUID id) {
+        transactionRepository.deleteById(id);
+    }
 }

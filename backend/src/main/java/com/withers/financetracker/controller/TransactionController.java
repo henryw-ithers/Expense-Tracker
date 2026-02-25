@@ -41,12 +41,18 @@ public class TransactionController {
     }
 
     @GetMapping
-public ResponseEntity<List<TransactionResponse>> list() {
-    List<TransactionResponse> body = transactionService.list().stream()
-            .map(TransactionController::toResponse) 
-            .toList();
-    return ResponseEntity.ok(body);
-}
+    public ResponseEntity<List<TransactionResponse>> list() {
+        List<TransactionResponse> body = transactionService.list().stream()
+                .map(TransactionController::toResponse)
+                .toList();
+        return ResponseEntity.ok(body);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        transactionService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 
     private static TransactionResponse toResponse(Transaction t) {
         UUID categoryId = t.getCategory() == null ? null : t.getCategory().getId();
@@ -59,7 +65,6 @@ public ResponseEntity<List<TransactionResponse>> list() {
                 t.getDescription(),
                 t.getDate(),
                 categoryId,
-                categoryName
-        );
+                categoryName);
     }
 }

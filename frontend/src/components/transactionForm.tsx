@@ -7,7 +7,7 @@ import type {
 
 type Props = {
   categories: CategoryResponse[];
-  onSubmit: (payload: CreateTransactionRequest) => Promise<void>;
+  onSubmit: (payload: CreateTransactionRequest) => Promise<unknown>;
 };
 
 export function TransactionForm({ categories, onSubmit }: Props) {

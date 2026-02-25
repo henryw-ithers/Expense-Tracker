@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.List;
 
 @Service
 @Transactional
@@ -51,5 +52,9 @@ public class TransactionService {
 
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+    }
+
+    public List<Transaction> list() {
+        return transactionRepository.findAll();
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.UUID;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -38,6 +39,14 @@ public class TransactionController {
         URI location = URI.create("/api/transactions/" + created.getId());
         return ResponseEntity.created(location).body(toResponse(created));
     }
+
+    @GetMapping
+public ResponseEntity<List<TransactionResponse>> list() {
+    List<TransactionResponse> body = transactionService.list().stream()
+            .map(TransactionController::toResponse) 
+            .toList();
+    return ResponseEntity.ok(body);
+}
 
     private static TransactionResponse toResponse(Transaction t) {
         UUID categoryId = t.getCategory() == null ? null : t.getCategory().getId();

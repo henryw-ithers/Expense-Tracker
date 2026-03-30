@@ -1,21 +1,16 @@
-import { useTransactions } from "../hooks/useTransactions";
-import { TransactionTable } from "../components/transactionTable";
+import DashboardChart from "../components/DashboardChart";
 
 export function DashboardPage() {
-  const { transactions, loading, error, totals, remove } = useTransactions();
-
-  if (loading) return <p>Loading transactions...</p>;
-  if (error) return <p>{error}</p>;
-
   return (
-    <div>
+    <div className="container py-4">
       <h1>Dashboard</h1>
 
-      <p>Income: {totals.income}</p>
-      <p>Expense: {totals.expense}</p>
-      <p>Net: {totals.net}</p>
-
-      <TransactionTable transactions={transactions} onDelete={remove} />
+      <div className="card mt-4">
+        <div className="card-body">
+          <h5 className="card-title">Recent Activity</h5>
+          <DashboardChart />
+        </div>
+      </div>
     </div>
   );
 }

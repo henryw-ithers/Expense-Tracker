@@ -35,30 +35,29 @@ export function SummaryCard({
         }}
       />
 
-      <div className="d-flex flex-column justify-content-between h-100 gap-2">
-        <div>
-          <div
-            style={{
-              fontSize: theme.fontSizes.sm,
-              fontWeight: theme.fontWeights.medium,
-              color: theme.colors.textMuted,
-              marginBottom: theme.spacing.sm,
-            }}
-          >
-            {title}
-          </div>
+      <div className="d-flex flex-column h-100">
+        <div
+          style={{
+            fontSize: theme.fontSizes.sm,
+            fontWeight: theme.fontWeights.medium,
+            color: theme.colors.textMuted,
+            marginBottom: theme.spacing.sm,
+          }}
+        >
+          {title}
+        </div>
 
-          <div
-            style={{
-              fontSize: theme.fontSizes.xl,
-              fontWeight: theme.fontWeights.bold,
-              color: theme.colors.text,
-              lineHeight: 1.15,
-              wordBreak: "break-word",
-            }}
-          >
-            {value}
-          </div>
+        <div
+          style={{
+            fontSize: "clamp(1.4rem, 3vw, 1.85rem)",
+            fontWeight: theme.fontWeights.bold,
+            color: theme.colors.text,
+            lineHeight: 1.1,
+            wordBreak: "break-word",
+            marginBottom: theme.spacing.sm,
+          }}
+        >
+          {value}
         </div>
 
         {subtitle && (
@@ -66,6 +65,7 @@ export function SummaryCard({
             style={{
               fontSize: theme.fontSizes.xs,
               color: theme.colors.textMuted,
+              marginTop: "auto",
             }}
           >
             {subtitle}

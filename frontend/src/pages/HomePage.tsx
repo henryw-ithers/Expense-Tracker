@@ -82,7 +82,7 @@ export function HomePage() {
           />
         </div>
 
-        <div className="col-12 col-sm-6 col-xl-4">
+        <div className="col-12 col-xl-4">
           <SummaryCard
             title="Net Balance"
             value={formatCurrency(netBalance)}
@@ -121,6 +121,140 @@ export function HomePage() {
               </div>
             </Card>
           )}
+        </div>
+      </div>
+
+      <div className="row g-3 mt-1">
+        <div className="col-12">
+          <Card>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <SectionTitle className="mb-0">Recent Transactions</SectionTitle>
+            </div>
+
+            {transactions.length > 0 ? (
+              <div className="table-responsive">
+                <table className="table align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th
+                        style={{
+                          color: theme.colors.textMuted,
+                          fontSize: theme.fontSizes.xs,
+                          fontWeight: theme.fontWeights.medium,
+                          borderColor: "rgba(148, 163, 184, 0.12)",
+                          background: "transparent",
+                        }}
+                      >
+                        Date
+                      </th>
+                      <th
+                        style={{
+                          color: theme.colors.textMuted,
+                          fontSize: theme.fontSizes.xs,
+                          fontWeight: theme.fontWeights.medium,
+                          borderColor: "rgba(148, 163, 184, 0.12)",
+                          background: "transparent",
+                        }}
+                      >
+                        Category
+                      </th>
+                      <th
+                        style={{
+                          color: theme.colors.textMuted,
+                          fontSize: theme.fontSizes.xs,
+                          fontWeight: theme.fontWeights.medium,
+                          borderColor: "rgba(148, 163, 184, 0.12)",
+                          background: "transparent",
+                        }}
+                      >
+                        Description
+                      </th>
+                      <th
+                        style={{
+                          color: theme.colors.textMuted,
+                          fontSize: theme.fontSizes.xs,
+                          fontWeight: theme.fontWeights.medium,
+                          borderColor: "rgba(148, 163, 184, 0.12)",
+                          background: "transparent",
+                          textAlign: "right",
+                        }}
+                      >
+                        Amount
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {[...transactions]
+                      .sort(
+                        (a, b) =>
+                          new Date(b.date).getTime() - new Date(a.date).getTime()
+                      )
+                      .slice(0, 5)
+                      .map((transaction) => (
+                        <tr key={transaction.id}>
+                          <td
+                            style={{
+                              color: theme.colors.text,
+                              borderColor: "rgba(148, 163, 184, 0.08)",
+                              background: "transparent",
+                            }}
+                          >
+                            {new Date(transaction.date).toLocaleDateString("en-CA")}
+                          </td>
+
+                          <td
+                            style={{
+                              color: theme.colors.text,
+                              borderColor: "rgba(148, 163, 184, 0.08)",
+                              background: "transparent",
+                            }}
+                          >
+                            {transaction.categoryName}
+                          </td>
+
+                          <td
+                            style={{
+                              color: theme.colors.textMuted,
+                              borderColor: "rgba(148, 163, 184, 0.08)",
+                              background: "transparent",
+                            }}
+                          >
+                            {transaction.description || "—"}
+                          </td>
+
+                          <td
+                            style={{
+                              color:
+                                transaction.type === "INCOME"
+                                  ? theme.colors.accent
+                                  : theme.colors.secondary,
+                              borderColor: "rgba(148, 163, 184, 0.08)",
+                              background: "transparent",
+                              textAlign: "right",
+                              fontWeight: theme.fontWeights.bold,
+                            }}
+                          >
+                            {transaction.type === "EXPENSE" ? "-" : "+"}
+                            {formatCurrency(Number(transaction.amount))}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p
+                className="mb-0"
+                style={{
+                  color: theme.colors.textMuted,
+                  fontSize: theme.fontSizes.sm,
+                }}
+              >
+                No transactions to display yet.
+              </p>
+            )}
+          </Card>
         </div>
       </div>
     </PageContainer>

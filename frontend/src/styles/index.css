@@ -54,3 +54,15 @@ a {
 .dropdown-menu {
   font-family: var(--font-main);
 }
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--color-text);
+  --bs-table-border-color: rgba(148, 163, 184, 0.12);
+  margin-bottom: 0;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}

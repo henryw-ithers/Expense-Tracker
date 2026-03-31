@@ -1,8 +1,7 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { DashboardPage } from "./pages/DashboardPage";
 import { AddTransactionPage } from "./pages/AddTransactionPage";
 import { CategoriesPage } from "./pages/CategoriesPage";
-import DashboardChart from "./components/DashboardChart";
 import "./App.css";
 
 export default function App() {
@@ -13,13 +12,6 @@ export default function App() {
             <a className="navbar-brand mb-0" href="#">
               Finance Tracker
             </a>
-
-            <input
-              className="form-control w-50 mx-3"
-              type="text"
-              placeholder="Search"
-              aria-label="Search"
-            />
 
             <button
               className="navbar-toggler d-md-none"

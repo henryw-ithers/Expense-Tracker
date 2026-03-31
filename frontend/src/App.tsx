@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import { BrowserRouter, Routes, Route, NavLink, Link } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { AddTransactionPage } from "./pages/AddTransactionPage";
 import "./App.css";
@@ -70,9 +70,9 @@ export default function App() {
             </div>
 
             <div className="app-topbar-center">
-              <NavLink to="/" className="navbar-brand mb-0 app-brand">
+              <Link to="/" className="navbar-brand mb-0 app-brand">
                 Finance Tracker
-              </NavLink>
+              </Link>
             </div>
 
             <div className="app-topbar-right"></div>

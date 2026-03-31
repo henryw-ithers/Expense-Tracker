@@ -33,18 +33,15 @@
   min-width: 0;
 }
 
-.app-brand {
+.app-brand,
+.app-brand:hover,
+.app-brand:focus,
+.app-brand:active,
+.app-brand:visited {
   color: var(--color-text);
-  font-family: var(--font-main);
-  font-weight: 700;
-  letter-spacing: 0.02em;
   text-decoration: none;
-  margin: 0;
-  text-align: center;
-}
-
-.app-brand:hover {
-  color: var(--color-text);
+  background: transparent;
+  box-shadow: none;
 }
 
 .app-menu-button {
@@ -148,6 +145,23 @@
 
 .offcanvas-backdrop.show {
   opacity: 0.35;
+}
+
+.dashboard-header {
+  max-width: 720px;
+}
+
+.summary-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+}
+
+.dashboard-empty-state {
+  max-width: 520px;
+  margin: 0 auto;
 }
 
 @media (min-width: 768px) {

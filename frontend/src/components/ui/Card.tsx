@@ -16,6 +16,7 @@ export function Card({ children, className = "", style }: CardProps) {
         color: theme.colors.text,
         borderRadius: theme.radii.md,
         boxShadow: theme.shadows.md,
+        border: "1px solid rgba(148, 163, 184, 0.10)",
         ...style,
       }}
     >

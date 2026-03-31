@@ -12,8 +12,8 @@ import {
 import { Line } from "react-chartjs-2";
 import { Card } from "../ui/Card";
 import { SectionTitle } from "../ui/SectionTitle";
-import { theme } from "../../theme/theme";
 import type { TransactionResponse } from "../../types/Transaction";
+import { theme } from "../../theme/theme";
 
 ChartJS.register(
   CategoryScale,
@@ -29,6 +29,12 @@ type DashboardChartProps = {
 };
 
 export function DashboardChart({ transactions }: DashboardChartProps) {
+  const rootStyles = getComputedStyle(document.documentElement);
+  const primaryColor =
+    rootStyles.getPropertyValue("--color-primary").trim() || "#3b82f6";
+  const textMutedColor =
+    rootStyles.getPropertyValue("--color-text-muted").trim() || "#94a3b8";
+
   const { chartData, groupedTransactions } = useMemo(() => {
     const groupedTotals: Record<string, number> = {};
     const groupedTransactions: Record<string, TransactionResponse[]> = {};
@@ -66,23 +72,32 @@ export function DashboardChart({ transactions }: DashboardChartProps) {
           {
             label: "Daily Net",
             data: values,
-            borderColor: theme.colors.primary,
-            backgroundColor: theme.colors.primary,
-            tension: 0.3,
+            borderColor: primaryColor,
+            backgroundColor: primaryColor,
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            tension: 0.35,
           },
         ],
       },
     };
-  }, [transactions]);
+  }, [transactions, primaryColor]);
 
   const options = useMemo(() => {
     return {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: {
+        mode: "index" as const,
+        intersect: false,
+      },
       plugins: {
         legend: {
+          display: true,
           labels: {
-            color: theme.colors.text,
+            color: textMutedColor,
+            boxWidth: 12,
           },
         },
         tooltip: {
@@ -102,28 +117,49 @@ export function DashboardChart({ transactions }: DashboardChartProps) {
       scales: {
         x: {
           ticks: {
-            color: theme.colors.textMuted,
+            color: textMutedColor,
+            maxRotation: 0,
           },
           grid: {
-            color: "rgba(148, 163, 184, 0.15)",
+            color: "rgba(148, 163, 184, 0.10)",
+          },
+          border: {
+            display: false,
           },
         },
         y: {
           ticks: {
-            color: theme.colors.textMuted,
+            color: textMutedColor,
           },
           grid: {
-            color: "rgba(148, 163, 184, 0.15)",
+            color: "rgba(148, 163, 184, 0.10)",
+          },
+          border: {
+            display: false,
           },
         },
       },
     };
-  }, [groupedTransactions]);
+  }, [groupedTransactions, textMutedColor]);
 
   return (
     <Card className="h-100">
-      <SectionTitle className="mb-4">Transactions Overview</SectionTitle>
-      <div style={{ height: "350px" }}>
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
+        <div>
+          <SectionTitle className="mb-1">Transactions Overview</SectionTitle>
+          <p
+            className="mb-0"
+            style={{
+              fontSize: theme.fontSizes.sm,
+              color: theme.colors.textMuted,
+            }}
+          >
+            Daily net balance based on recorded transactions.
+          </p>
+        </div>
+      </div>
+
+      <div style={{ height: "380px" }}>
         <Line data={chartData} options={options} />
       </div>
     </Card>

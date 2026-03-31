@@ -8,14 +8,13 @@ A full-stack personal finance tracking application that allows users to manage t
 - Spring Boot
 - Maven
 - RESTful API
-- JPA / Hibernate
-- H2 or PostgreSQL
 
 ### Frontend
 - React
 - TypeScript
 - Vite
 - Fetch API
+- Bootstrap
 
 ---
 
@@ -101,6 +100,7 @@ frontend/
 │ ├── hooks/
 │ ├── pages/
 │ ├── services/
+│ ├── styles/
 │ ├── types/
 │ ├── App.tsx
 │ └── main.tsx

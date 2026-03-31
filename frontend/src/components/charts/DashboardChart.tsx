@@ -28,88 +28,140 @@ type DashboardChartProps = {
   transactions: TransactionResponse[];
 };
 
+function getCategoryColor(categoryName: string): string {
+  let hash = 0;
+
+  for (let i = 0; i < categoryName.length; i++) {
+    hash = categoryName.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 65%, 55%)`;
+}
+
+function formatCurrency(value: number): string {
+  return new Intl.NumberFormat("en-CA", {
+    style: "currency",
+    currency: "CAD",
+  }).format(value);
+}
+
 export function DashboardChart({ transactions }: DashboardChartProps) {
   const rootStyles = getComputedStyle(document.documentElement);
-  const primaryColor =
-    rootStyles.getPropertyValue("--color-primary").trim() || "#3b82f6";
   const textMutedColor =
     rootStyles.getPropertyValue("--color-text-muted").trim() || "#94a3b8";
 
-  const { chartData, groupedTransactions } = useMemo(() => {
-    const groupedTotals: Record<string, number> = {};
-    const groupedTransactions: Record<string, TransactionResponse[]> = {};
+  const recentTransactions = useMemo(() => {
+    const today = new Date();
+    const cutoff = new Date();
+    cutoff.setDate(today.getDate() - 30);
 
-    transactions.forEach((transaction) => {
-      const dateKey = new Date(transaction.date).toLocaleDateString();
+    return [...transactions]
+      .filter((transaction) => {
+        const transactionDate = new Date(transaction.date);
+        return transactionDate >= cutoff && transactionDate <= today;
+      })
+      .sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+  }, [transactions]);
 
-      if (!groupedTotals[dateKey]) {
-        groupedTotals[dateKey] = 0;
-      }
+  const summary = useMemo(() => {
+    return recentTransactions.reduce(
+      (totals, transaction) => {
+        const amount = Number(transaction.amount);
 
-      if (!groupedTransactions[dateKey]) {
-        groupedTransactions[dateKey] = [];
-      }
+        if (transaction.type === "INCOME") {
+          totals.income += amount;
+          totals.net += amount;
+        } else {
+          totals.expenses += amount;
+          totals.net -= amount;
+        }
 
-      const amount = Number(transaction.amount);
-
-      if (transaction.type === "EXPENSE") {
-        groupedTotals[dateKey] -= amount;
-      } else {
-        groupedTotals[dateKey] += amount;
-      }
-
-      groupedTransactions[dateKey].push(transaction);
-    });
-
-    const labels = Object.keys(groupedTotals);
-    const values = Object.values(groupedTotals);
-
-    return {
-      groupedTransactions,
-      chartData: {
-        labels,
-        datasets: [
-          {
-            label: "Daily Net",
-            data: values,
-            borderColor: primaryColor,
-            backgroundColor: primaryColor,
-            borderWidth: 2,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            tension: 0.35,
-          },
-        ],
+        return totals;
       },
+      {
+        income: 0,
+        expenses: 0,
+        net: 0,
+      }
+    );
+  }, [recentTransactions]);
+
+  const chartData = useMemo(() => {
+    return {
+      labels: recentTransactions.map((transaction, index) => {
+        const formattedDate = new Date(transaction.date).toLocaleDateString(
+          "en-CA",
+          {
+            month: "short",
+            day: "numeric",
+          }
+        );
+
+        return `${formattedDate} #${index + 1}`;
+      }),
+      datasets: [
+        {
+          label: "Transactions",
+          data: recentTransactions.map((transaction) =>
+            transaction.type === "EXPENSE"
+              ? -Number(transaction.amount)
+              : Number(transaction.amount)
+          ),
+          borderColor: "rgba(148, 163, 184, 0.28)",
+          backgroundColor: "rgba(148, 163, 184, 0.28)",
+          borderWidth: 2,
+          tension: 0.3,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          pointBackgroundColor: recentTransactions.map((transaction) =>
+            getCategoryColor(transaction.categoryName)
+          ),
+          pointBorderColor: recentTransactions.map((transaction) =>
+            getCategoryColor(transaction.categoryName)
+          ),
+          pointBorderWidth: 1,
+        },
+      ],
     };
-  }, [transactions, primaryColor]);
+  }, [recentTransactions]);
 
   const options = useMemo(() => {
     return {
       responsive: true,
       maintainAspectRatio: false,
       interaction: {
-        mode: "index" as const,
-        intersect: false,
+        mode: "nearest" as const,
+        intersect: true,
       },
       plugins: {
         legend: {
-          display: true,
-          labels: {
-            color: textMutedColor,
-            boxWidth: 12,
-          },
+          display: false,
         },
         tooltip: {
           callbacks: {
-            label: function (context: TooltipItem<"line">) {
-              const date = context.label;
-              const dayTransactions = groupedTransactions[date] || [];
-
-              return dayTransactions.map((transaction) => {
-                const sign = transaction.type === "EXPENSE" ? "-" : "+";
-                return `${transaction.categoryName}: ${sign}$${transaction.amount}`;
+            title: function (tooltipItems: TooltipItem<"line">[]) {
+              const transaction = recentTransactions[tooltipItems[0].dataIndex];
+              return new Date(transaction.date).toLocaleDateString("en-CA", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
               });
+            },
+            label: function (context: TooltipItem<"line">) {
+              const transaction = recentTransactions[context.dataIndex];
+              const amount = Number(transaction.amount);
+
+              return [
+                `Category: ${transaction.categoryName}`,
+                `Type: ${transaction.type}`,
+                `Amount: ${formatCurrency(
+                  transaction.type === "EXPENSE" ? -amount : amount
+                )}`,
+                `Description: ${transaction.description || "None"}`,
+              ];
             },
           },
         },
@@ -118,7 +170,8 @@ export function DashboardChart({ transactions }: DashboardChartProps) {
         x: {
           ticks: {
             color: textMutedColor,
-            maxRotation: 0,
+            autoSkip: true,
+            maxTicksLimit: 8,
           },
           grid: {
             color: "rgba(148, 163, 184, 0.10)",
@@ -130,6 +183,9 @@ export function DashboardChart({ transactions }: DashboardChartProps) {
         y: {
           ticks: {
             color: textMutedColor,
+            callback: function (value: string | number) {
+              return formatCurrency(Number(value));
+            },
           },
           grid: {
             color: "rgba(148, 163, 184, 0.10)",
@@ -140,11 +196,39 @@ export function DashboardChart({ transactions }: DashboardChartProps) {
         },
       },
     };
-  }, [groupedTransactions, textMutedColor]);
+  }, [recentTransactions, textMutedColor]);
+
+  const categoryLegend = useMemo(() => {
+    const uniqueCategories = Array.from(
+      new Set(recentTransactions.map((transaction) => transaction.categoryName))
+    );
+
+    return uniqueCategories.map((categoryName) => ({
+      name: categoryName,
+      color: getCategoryColor(categoryName),
+    }));
+  }, [recentTransactions]);
+
+  if (recentTransactions.length === 0) {
+    return (
+      <Card className="h-100">
+        <SectionTitle className="mb-2">Transactions Overview</SectionTitle>
+        <p
+          className="mb-0"
+          style={{
+            fontSize: theme.fontSizes.sm,
+            color: theme.colors.textMuted,
+          }}
+        >
+          No transactions recorded in the past 30 days.
+        </p>
+      </Card>
+    );
+  }
 
   return (
     <Card className="h-100">
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
+      <div className="d-flex flex-column gap-3 mb-4">
         <div>
           <SectionTitle className="mb-1">Transactions Overview</SectionTitle>
           <p
@@ -154,8 +238,82 @@ export function DashboardChart({ transactions }: DashboardChartProps) {
               color: theme.colors.textMuted,
             }}
           >
-            Daily net balance based on recorded transactions.
+            Past 30 days · one dot per transaction · colored by category
           </p>
+        </div>
+
+        <div className="d-flex flex-wrap gap-3">
+          <div
+            style={{
+              fontSize: theme.fontSizes.xs,
+              color: theme.colors.textMuted,
+            }}
+          >
+            Income:{" "}
+            <span style={{ color: theme.colors.text }}>
+              {formatCurrency(summary.income)}
+            </span>
+          </div>
+
+          <div
+            style={{
+              fontSize: theme.fontSizes.xs,
+              color: theme.colors.textMuted,
+            }}
+          >
+            Expenses:{" "}
+            <span style={{ color: theme.colors.text }}>
+              {formatCurrency(summary.expenses)}
+            </span>
+          </div>
+
+          <div
+            style={{
+              fontSize: theme.fontSizes.xs,
+              color: theme.colors.textMuted,
+            }}
+          >
+            Net:{" "}
+            <span style={{ color: theme.colors.text }}>
+              {formatCurrency(summary.net)}
+            </span>
+          </div>
+
+          <div
+            style={{
+              fontSize: theme.fontSizes.xs,
+              color: theme.colors.textMuted,
+            }}
+          >
+            Transactions:{" "}
+            <span style={{ color: theme.colors.text }}>
+              {recentTransactions.length}
+            </span>
+          </div>
+        </div>
+
+        <div className="d-flex flex-wrap gap-3">
+          {categoryLegend.map((category) => (
+            <div
+              key={category.name}
+              className="d-flex align-items-center gap-2"
+              style={{
+                fontSize: theme.fontSizes.xs,
+                color: theme.colors.textMuted,
+              }}
+            >
+              <span
+                style={{
+                  width: "10px",
+                  height: "10px",
+                  borderRadius: "50%",
+                  backgroundColor: category.color,
+                  display: "inline-block",
+                }}
+              />
+              <span>{category.name}</span>
+            </div>
+          ))}
         </div>
       </div>
 

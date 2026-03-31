@@ -265,289 +265,13 @@ export function TransactionsPage() {
             fontSize: theme.fontSizes.sm,
           }}
         >
-          Add transactions, create categories, customize category colors, and
-          search your history in one place.
+          Search your history, add transactions, and manage categories in one place.
         </p>
       </div>
 
       <div className="row g-3">
         <div className="col-12">
           <Card>
-            <SectionTitle className="mb-3">Add Transaction</SectionTitle>
-
-            <form onSubmit={handleTransactionSubmit}>
-              <div className="row g-3">
-                <div className="col-12 col-md-6 col-xl-3">
-                  <label className="form-label">Amount</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    name="amount"
-                    value={formData.amount}
-                    onChange={handleTransactionChange}
-                    className="form-control"
-                    placeholder="0.00"
-                  />
-                </div>
-
-                <div className="col-12 col-md-6 col-xl-3">
-                  <label className="form-label">Type</label>
-                  <select
-                    name="type"
-                    value={formData.type}
-                    onChange={handleTransactionChange}
-                    className="form-select"
-                  >
-                    <option value="EXPENSE">Expense</option>
-                    <option value="INCOME">Income</option>
-                  </select>
-                </div>
-
-                <div className="col-12 col-md-6 col-xl-3">
-                  <label className="form-label">Date</label>
-                  <input
-                    type="date"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleTransactionChange}
-                    className="form-control"
-                  />
-                </div>
-
-                <div className="col-12 col-md-6 col-xl-3">
-                  <label className="form-label">Category</label>
-                  <select
-                    name="categoryId"
-                    value={formData.categoryId}
-                    onChange={handleTransactionChange}
-                    className="form-select"
-                    disabled={categoriesLoading}
-                  >
-                    <option value="">
-                      {categoriesLoading ? "Loading categories..." : "Select category"}
-                    </option>
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="col-12">
-                  <label className="form-label">Description</label>
-                  <input
-                    type="text"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleTransactionChange}
-                    className="form-control"
-                    placeholder="Optional description"
-                  />
-                </div>
-
-                <div className="col-12 d-flex flex-wrap gap-2">
-                  <button
-                    type="submit"
-                    className="btn"
-                    disabled={isSubmittingTransaction}
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                      color: theme.colors.text,
-                      border: "none",
-                      borderRadius: theme.radii.md,
-                      fontWeight: theme.fontWeights.medium,
-                      padding: "0.75rem 1rem",
-                    }}
-                  >
-                    {isSubmittingTransaction ? "Adding..." : "Add Transaction"}
-                  </button>
-
-                  <button
-                    type="button"
-                    className="btn btn-sm"
-                    onClick={() => setShowCategoryForm((prev) => !prev)}
-                    style={{
-                      backgroundColor: "rgba(59, 130, 246, 0.14)",
-                      color: theme.colors.text,
-                      border: "1px solid rgba(59, 130, 246, 0.24)",
-                      borderRadius: theme.radii.md,
-                    }}
-                  >
-                    {showCategoryForm ? "Cancel New Category" : "+ New Category"}
-                  </button>
-                </div>
-
-                {(submitError || transactionsError || categoriesError) && (
-                  <div className="col-12">
-                    <div
-                      style={{
-                        color: theme.colors.secondary,
-                        fontSize: theme.fontSizes.sm,
-                      }}
-                    >
-                      {submitError || transactionsError || categoriesError}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </form>
-
-            {showCategoryForm && (
-              <div
-                style={{
-                  marginTop: theme.spacing.lg,
-                  padding: theme.spacing.md,
-                  borderRadius: theme.radii.md,
-                  border: "1px solid rgba(148, 163, 184, 0.12)",
-                  backgroundColor: "rgba(255, 255, 255, 0.02)",
-                }}
-              >
-                <div className="row g-3 align-items-end">
-                  <div className="col-12 col-md-8">
-                    <label className="form-label mb-2">New Category Name</label>
-                    <input
-                      type="text"
-                      value={categoryForm.name}
-                      onChange={handleCategoryChange}
-                      className="form-control"
-                      placeholder="e.g. Groceries"
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-4">
-                    <button
-                      type="button"
-                      className="btn w-100"
-                      disabled={isSubmittingCategory}
-                      onClick={() => void handleCreateCategory()}
-                      style={{
-                        backgroundColor: theme.colors.primary,
-                        color: theme.colors.text,
-                        border: "none",
-                        borderRadius: theme.radii.md,
-                        fontWeight: theme.fontWeights.medium,
-                        padding: "0.75rem 1rem",
-                      }}
-                    >
-                      {isSubmittingCategory ? "Creating..." : "Create Category"}
-                    </button>
-                  </div>
-
-                  {categorySubmitError && (
-                    <div className="col-12">
-                      <div
-                        style={{
-                          color: theme.colors.secondary,
-                          fontSize: theme.fontSizes.sm,
-                        }}
-                      >
-                        {categorySubmitError}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </Card>
-        </div>
-
-        <div className="col-12 col-xxl-4">
-          <Card className="h-100">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <SectionTitle className="mb-0">Categories</SectionTitle>
-              <span
-                style={{
-                  color: theme.colors.textMuted,
-                  fontSize: theme.fontSizes.xs,
-                }}
-              >
-                {categories.length} total
-              </span>
-            </div>
-
-            {categoriesLoading ? (
-              <p
-                className="mb-0"
-                style={{
-                  color: theme.colors.textMuted,
-                  fontSize: theme.fontSizes.sm,
-                }}
-              >
-                Loading categories...
-              </p>
-            ) : categories.length === 0 ? (
-              <p
-                className="mb-0"
-                style={{
-                  color: theme.colors.textMuted,
-                  fontSize: theme.fontSizes.sm,
-                }}
-              >
-                No categories yet.
-              </p>
-            ) : (
-              <div className="d-flex flex-column gap-3">
-                {categories.map((category) => {
-                  const color = getCategoryColor(category.id, category.name);
-
-                  return (
-                    <div
-                      key={category.id}
-                      className="d-flex align-items-center justify-content-between gap-3"
-                      style={{
-                        paddingBottom: theme.spacing.sm,
-                        borderBottom: "1px solid rgba(148, 163, 184, 0.08)",
-                      }}
-                    >
-                      <div className="d-flex align-items-center gap-2 min-w-0">
-                        <span
-                          style={{
-                            width: "12px",
-                            height: "12px",
-                            borderRadius: "50%",
-                            backgroundColor: color,
-                            display: "inline-block",
-                            flexShrink: 0,
-                          }}
-                        />
-                        <span
-                          style={{
-                            color: theme.colors.text,
-                            fontSize: theme.fontSizes.sm,
-                          }}
-                        >
-                          {category.name}
-                        </span>
-                      </div>
-
-                      <input
-                        type="color"
-                        value={color}
-                        onChange={(event) =>
-                          handleCategoryColorChange(category.id, event.target.value)
-                        }
-                        title={`Choose color for ${category.name}`}
-                        style={{
-                          width: "40px",
-                          height: "32px",
-                          padding: 0,
-                          border: "none",
-                          background: "transparent",
-                          cursor: "pointer",
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </Card>
-        </div>
-
-        <div className="col-12 col-xxl-8">
-          <Card className="h-100">
             <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-3">
               <SectionTitle className="mb-0">Transaction History</SectionTitle>
               <span
@@ -698,11 +422,7 @@ export function TransactionsPage() {
 
                         <td>{transaction.type}</td>
 
-                        <td
-                          style={{
-                            color: theme.colors.textMuted,
-                          }}
-                        >
+                        <td style={{ color: theme.colors.textMuted }}>
                           {transaction.description || "—"}
                         </td>
 
@@ -739,6 +459,272 @@ export function TransactionsPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+          </Card>
+        </div>
+
+        <div className="col-12 col-xl-7">
+          <Card>
+            <SectionTitle className="mb-3">Add Transaction</SectionTitle>
+
+            <form onSubmit={handleTransactionSubmit}>
+              <div className="row g-3">
+                <div className="col-12 col-md-6 col-xl-3">
+                  <label className="form-label">Amount</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    name="amount"
+                    value={formData.amount}
+                    onChange={handleTransactionChange}
+                    className="form-control"
+                    placeholder="0.00"
+                  />
+                </div>
+
+                <div className="col-12 col-md-6 col-xl-3">
+                  <label className="form-label">Type</label>
+                  <select
+                    name="type"
+                    value={formData.type}
+                    onChange={handleTransactionChange}
+                    className="form-select"
+                  >
+                    <option value="EXPENSE">Expense</option>
+                    <option value="INCOME">Income</option>
+                  </select>
+                </div>
+
+                <div className="col-12 col-md-6 col-xl-3">
+                  <label className="form-label">Date</label>
+                  <input
+                    type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleTransactionChange}
+                    className="form-control"
+                  />
+                </div>
+
+                <div className="col-12 col-md-6 col-xl-3">
+                  <label className="form-label">Category</label>
+                  <select
+                    name="categoryId"
+                    value={formData.categoryId}
+                    onChange={handleTransactionChange}
+                    className="form-select"
+                    disabled={categoriesLoading}
+                  >
+                    <option value="">
+                      {categoriesLoading ? "Loading categories..." : "Select category"}
+                    </option>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-12">
+                  <label className="form-label">Description</label>
+                  <input
+                    type="text"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleTransactionChange}
+                    className="form-control"
+                    placeholder="Optional description"
+                  />
+                </div>
+
+                <div className="col-12 d-flex flex-wrap gap-2">
+                  <button
+                    type="submit"
+                    className="btn"
+                    disabled={isSubmittingTransaction}
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.text,
+                      border: "none",
+                      borderRadius: theme.radii.md,
+                      fontWeight: theme.fontWeights.medium,
+                      padding: "0.75rem 1rem",
+                    }}
+                  >
+                    {isSubmittingTransaction ? "Adding..." : "Add Transaction"}
+                  </button>
+                </div>
+
+                {(submitError || transactionsError || categoriesError) && (
+                  <div className="col-12">
+                    <div
+                      style={{
+                        color: theme.colors.secondary,
+                        fontSize: theme.fontSizes.sm,
+                      }}
+                    >
+                      {submitError || transactionsError || categoriesError}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </form>
+          </Card>
+        </div>
+
+        <div className="col-12 col-xl-5">
+          <Card className="h-100">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <SectionTitle className="mb-0">Categories</SectionTitle>
+              <button
+                type="button"
+                className="btn btn-sm"
+                onClick={() => setShowCategoryForm((prev) => !prev)}
+                style={{
+                  backgroundColor: "rgba(59, 130, 246, 0.14)",
+                  color: theme.colors.text,
+                  border: "1px solid rgba(59, 130, 246, 0.24)",
+                  borderRadius: theme.radii.md,
+                }}
+              >
+                {showCategoryForm ? "Close" : "+ New Category"}
+              </button>
+            </div>
+
+            {showCategoryForm && (
+              <div
+                style={{
+                  marginBottom: theme.spacing.lg,
+                  padding: theme.spacing.md,
+                  borderRadius: theme.radii.md,
+                  border: "1px solid rgba(148, 163, 184, 0.12)",
+                  backgroundColor: "rgba(255, 255, 255, 0.02)",
+                }}
+              >
+                <div className="row g-3 align-items-end">
+                  <div className="col-12">
+                    <label className="form-label mb-2">New Category Name</label>
+                    <input
+                      type="text"
+                      value={categoryForm.name}
+                      onChange={handleCategoryChange}
+                      className="form-control"
+                      placeholder="e.g. Groceries"
+                    />
+                  </div>
+
+                  <div className="col-12">
+                    <button
+                      type="button"
+                      className="btn w-100"
+                      disabled={isSubmittingCategory}
+                      onClick={() => void handleCreateCategory()}
+                      style={{
+                        backgroundColor: theme.colors.primary,
+                        color: theme.colors.text,
+                        border: "none",
+                        borderRadius: theme.radii.md,
+                        fontWeight: theme.fontWeights.medium,
+                        padding: "0.75rem 1rem",
+                      }}
+                    >
+                      {isSubmittingCategory ? "Creating..." : "Create Category"}
+                    </button>
+                  </div>
+
+                  {categorySubmitError && (
+                    <div className="col-12">
+                      <div
+                        style={{
+                          color: theme.colors.secondary,
+                          fontSize: theme.fontSizes.sm,
+                        }}
+                      >
+                        {categorySubmitError}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {categoriesLoading ? (
+              <p
+                className="mb-0"
+                style={{
+                  color: theme.colors.textMuted,
+                  fontSize: theme.fontSizes.sm,
+                }}
+              >
+                Loading categories...
+              </p>
+            ) : categories.length === 0 ? (
+              <p
+                className="mb-0"
+                style={{
+                  color: theme.colors.textMuted,
+                  fontSize: theme.fontSizes.sm,
+                }}
+              >
+                No categories yet.
+              </p>
+            ) : (
+              <div className="d-flex flex-column gap-3">
+                {categories.map((category) => {
+                  const color = getCategoryColor(category.id, category.name);
+
+                  return (
+                    <div
+                      key={category.id}
+                      className="d-flex align-items-center justify-content-between gap-3"
+                      style={{
+                        paddingBottom: theme.spacing.sm,
+                        borderBottom: "1px solid rgba(148, 163, 184, 0.08)",
+                      }}
+                    >
+                      <div className="d-flex align-items-center gap-2 min-w-0">
+                        <span
+                          style={{
+                            width: "12px",
+                            height: "12px",
+                            borderRadius: "50%",
+                            backgroundColor: color,
+                            display: "inline-block",
+                            flexShrink: 0,
+                          }}
+                        />
+                        <span
+                          style={{
+                            color: theme.colors.text,
+                            fontSize: theme.fontSizes.sm,
+                          }}
+                        >
+                          {category.name}
+                        </span>
+                      </div>
+
+                      <input
+                        type="color"
+                        value={color}
+                        onChange={(event) =>
+                          handleCategoryColorChange(category.id, event.target.value)
+                        }
+                        title={`Choose color for ${category.name}`}
+                        style={{
+                          width: "40px",
+                          height: "32px",
+                          padding: 0,
+                          border: "none",
+                          background: "transparent",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             )}
           </Card>

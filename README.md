@@ -97,10 +97,14 @@ frontend/
 ├── src/
 │ ├── assets/
 │ ├── components/
+│ │   ├── charts/
+| │   ├── layout/
+| │   ├── ui/
 │ ├── hooks/
 │ ├── pages/
 │ ├── services/
 │ ├── styles/
+│ ├── theme/
 │ ├── types/
 │ ├── App.tsx
 │ └── main.tsx

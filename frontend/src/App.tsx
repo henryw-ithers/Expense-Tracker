@@ -1,68 +1,93 @@
-import { Route, Routes } from "react-router-dom";
-import { DashboardPage } from "./pages/DashboardPage";
+import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import { HomePage } from "./pages/HomePage";
 import { AddTransactionPage } from "./pages/AddTransactionPage";
-import { CategoriesPage } from "./pages/CategoriesPage";
 import "./App.css";
 
 export default function App() {
   return (
-      <div>
-        <header className="navbar navbar-dark sticky-top bg-dark shadow px-3">
-          <div className="container-fluid d-flex align-items-center justify-content-between">
-            <a className="navbar-brand mb-0" href="#">
-              Finance Tracker
-            </a>
+    <BrowserRouter>
+      <div className="app-shell">
+        {/* Top Navbar */}
+        <nav
+          className="navbar navbar-dark sticky-top app-topbar flex-md-nowrap p-0 shadow"
+          data-bs-theme="dark"
+        >
+          <NavLink
+            to="/"
+            className="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 app-brand"
+          >
+            Finance Tracker
+          </NavLink>
 
-            <button
-              className="navbar-toggler d-md-none"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#sidebarMenu"
-              aria-controls="sidebarMenu"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-          </div>
-        </header>
+          <button
+            className="navbar-toggler position-absolute d-md-none collapsed topbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu"
+            aria-controls="sidebarMenu"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+        </nav>
 
         <div className="container-fluid">
           <div className="row">
+            {/* Sidebar */}
             <nav
               id="sidebarMenu"
-              className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
+              className="col-md-3 col-lg-2 d-md-block sidebar collapse app-sidebar"
             >
-              <div className="position-sticky pt-3">
+              <div className="position-sticky pt-3 sidebar-sticky">
                 <ul className="nav flex-column">
                   <li className="nav-item">
-                    <a className="nav-link" href="/">
+                    <NavLink
+                      to="/"
+                      end
+                      className={({ isActive }) =>
+                        `nav-link app-nav-link${isActive ? " active" : ""}`
+                      }
+                    >
                       Dashboard
-                    </a>
+                    </NavLink>
                   </li>
+
                   <li className="nav-item">
-                    <a className="nav-link" href="/add">
+                    <NavLink
+                      to="/add"
+                      className={({ isActive }) =>
+                        `nav-link app-nav-link${isActive ? " active" : ""}`
+                      }
+                    >
                       Add Transaction
-                    </a>
+                    </NavLink>
                   </li>
+
                   <li className="nav-item">
-                    <a className="nav-link" href="/categories">
-                      Categories
-                    </a>
+                    <NavLink
+                      to="/transactions"
+                      className={({ isActive }) =>
+                        `nav-link app-nav-link${isActive ? " active" : ""}`
+                      }
+                    >
+                      Transactions
+                    </NavLink>
                   </li>
                 </ul>
               </div>
             </nav>
 
-            <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            {/* Main Content */}
+            <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4 app-main">
               <Routes>
-                <Route path="/" element={<DashboardPage />} />
+                <Route path="/" element={<HomePage />} />
                 <Route path="/add" element={<AddTransactionPage />} />
-                <Route path="/categories" element={<CategoriesPage />} />
               </Routes>
             </main>
           </div>
         </div>
       </div>
+    </BrowserRouter>
   );
 }

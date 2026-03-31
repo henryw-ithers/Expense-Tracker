@@ -3,26 +3,26 @@ import { HomePage } from "./pages/HomePage";
 import { TransactionsPage } from "./pages/TransactionPage";
 import "./App.css";
 
-function SidebarLinks() {
+function MenuLinks() {
   return (
-    <ul className="nav flex-column gap-1">
-      <li className="nav-item">
+    <ul className="dropdown-menu app-dropdown-menu">
+      <li>
         <NavLink
           to="/"
           end
           className={({ isActive }) =>
-            `nav-link app-nav-link${isActive ? " active" : ""}`
+            `dropdown-item app-dropdown-link${isActive ? " active" : ""}`
           }
         >
           Dashboard
         </NavLink>
       </li>
 
-      <li className="nav-item">
+      <li>
         <NavLink
           to="/transactions"
           className={({ isActive }) =>
-            `nav-link app-nav-link${isActive ? " active" : ""}`
+            `dropdown-item app-dropdown-link${isActive ? " active" : ""}`
           }
         >
           Transactions
@@ -42,20 +42,24 @@ export default function App() {
         >
           <div className="container-fluid px-3 px-md-4 app-topbar-inner">
             <div className="app-topbar-left">
-              <button
-                className="app-menu-button d-md-none"
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#mobileSidebar"
-                aria-controls="mobileSidebar"
-                aria-label="Toggle navigation"
-              >
-                <span className="app-menu-lines" aria-hidden="true">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </span>
-              </button>
+              <div className="dropdown">
+                <button
+                  className="app-menu-button"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  data-bs-auto-close="true"
+                  aria-expanded="false"
+                  aria-label="Open menu"
+                >
+                  <span className="app-menu-lines" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </span>
+                </button>
+
+                <MenuLinks />
+              </div>
             </div>
 
             <div className="app-topbar-center">
@@ -68,48 +72,12 @@ export default function App() {
           </div>
         </nav>
 
-        <div className="container-fluid">
-          <div className="row flex-nowrap">
-            <aside className="col-md-3 col-lg-2 d-none d-md-block app-sidebar">
-              <div className="sidebar-sticky p-3">
-                <SidebarLinks />
-              </div>
-            </aside>
-
-            <main className="col-12 col-md-9 col-lg-10 app-main">
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/transactions" element={<TransactionsPage />} />
-              </Routes>
-            </main>
-          </div>
-        </div>
-
-        <div
-          className="offcanvas offcanvas-start app-offcanvas d-md-none"
-          tabIndex={-1}
-          id="mobileSidebar"
-          aria-labelledby="mobileSidebarLabel"
-        >
-          <div className="offcanvas-header border-bottom">
-            <h5
-              className="offcanvas-title app-offcanvas-title"
-              id="mobileSidebarLabel"
-            >
-              Menu
-            </h5>
-            <button
-              type="button"
-              className="btn-close btn-close-white"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-            ></button>
-          </div>
-
-          <div className="offcanvas-body p-3">
-            <SidebarLinks />
-          </div>
-        </div>
+        <main className="app-main">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/transactions" element={<TransactionsPage />} />
+          </Routes>
+        </main>
       </div>
     </BrowserRouter>
   );

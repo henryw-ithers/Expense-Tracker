@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, NavLink, Link } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
-import { AddTransactionPage } from "./pages/AddTransactionPage";
+import { TransactionsPage } from "./pages/TransactionPage";
 import "./App.css";
 
 function SidebarLinks() {
@@ -15,17 +15,6 @@ function SidebarLinks() {
           }
         >
           Dashboard
-        </NavLink>
-      </li>
-
-      <li className="nav-item">
-        <NavLink
-          to="/add"
-          className={({ isActive }) =>
-            `nav-link app-nav-link${isActive ? " active" : ""}`
-          }
-        >
-          Add Transaction
         </NavLink>
       </li>
 
@@ -90,7 +79,7 @@ export default function App() {
             <main className="col-12 col-md-9 col-lg-10 app-main">
               <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/add" element={<AddTransactionPage />} />
+                <Route path="/transactions" element={<TransactionsPage />} />
               </Routes>
             </main>
           </div>

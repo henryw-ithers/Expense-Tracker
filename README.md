@@ -43,8 +43,8 @@ A full-stack personal finance tracking application that allows users to manage t
   - `hooks/` – reusable stateful logic
   - `components/` – reusable UI components
   - `pages/` – route-level screens
-- Dashboard page
-- Add Transaction page
+- Home page
+- Transaction page
 - Service-based API calls
 - Type-safe backend integration
 
